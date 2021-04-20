@@ -32,6 +32,7 @@ enemy_class = {
     }
 }
 
+
 friends_class = {
     'b_priest': {
         'name': 'Священник',
@@ -64,7 +65,7 @@ def change_class(user_id, req, res):
                 session_state[user_id]['first_name'] = name
                 res['response']['text'] = f"Я рад что ты вернулся, {name}, выбери своё новое обличие"
                 res['response']['card'] = {
-                    'type': 'ItemList',
+                    'type': 'ItemsList',
                     'header': {
                         'text': f"Я рад что ты вернулся, {name}, выбери своё новое обличие"
                     },
@@ -120,18 +121,109 @@ def go_adventure(user_id, req, res):
             'image_id': player_class[selected_class]['img'],
             'title': f"{selected_class.capitalize} - Ха, что за слабака ты выбрал?! Ладно, сойдёт..."
         },
-        'buttons': [
+        'buttons':[
             {
-                "title": "Что со мной произошло?"
+                "title": "Не надо никаких разговоров. Пошли воевать!!!",
                 "payload": {'fight': True},
+                "hide": True
+            },
+            {
+                "title": "Что со мной произошло?",
+                "hide": True
+            },
+            {
+                "title": "Кто ты такой?",
                 "hide": True
             }
         ]
     }
+    if req['request']['original_utterance'] == "Что со мной произошло?":
+        res['response'] = {
+            'text': f"Ты был великим и могучим рыцарем нашего государства. Именно тебя называли героем Орррска"
+                    f"Именно ты поймал Злого Орка и усадил его в темницу",
+                    f"Мир был на нашей земле окола 1000 лет, пока из тени не вышел он..."
+            'card': {
+                'type': 'BigImage',
+                'image_id': friends_class['b_priest']['img'],
+                'title': friends_class['b_priest']['name']
+                    },
+            'buttons':[
+                {
+                    "title": "А кто он?",
+                    "hide": True
+                },
+                {
+                    "title": "И как я возродился?",
+                    "hide": True
+                }
+            ]
+        }
+        if req['request']['original_utterance'] == "А кто он?":
+            res['response'] = {
+                'text': f"Тёмный Маг... Он был правой рукой Злого Орка,"
+                        f"а теперь решил возглавить всю его паршивую армию"
+                        f"и вернуть своего лидера. И я должен сказать, что это у него почти получилось..."
+                        f"В общем-то, поэтому ты и сдесь."
+                        f"Я Священник... Один из немногих, кто до сих пор сопротивляется..."
+                        f"У нас есть свой лидер - Добрый Маг! Именно благодаря нему ты сдесь.",
+                'card': {
+                    'type': 'BigImage',
+                    'image_id': friends_class['b_priest']['img'],
+                    'title': friends_class['b_priest']['name']
+                },
+            'buttons':[
+                {
+                    "title": "Кажется, я начинаю припоминать свою прошлую жизнь. Отведи меня к нему!",
+                    "hide": True
+                    }
+                ]
+            }
+        elif req['request']['original_utterance'] == "И как я возродился?":
+            res['response'] = {
+                'text': f"Тебя возродил Добрый Маг. Это наш предводитель. Предводитель полследнего лагеря "
+                        f"сопротивления, который воюет против Тёмного Мага",
+                'card': {
+                    'type': 'BigImage',
+                    'image_id': friends_class['b_priest']['img'],
+                    'title': friends_class['b_priest']['name']
+                },
+                'buttons': [
+                    {
+                        "title": "Кажется, я начинаю припоминать свою прошлую жизнь. Отведи меня к нему!",
+                        "hide": True
+                    }
+                ]
+            }
+    elif req['request']['original_utterance'] == "Кто ты такой?":
+        res['response'] = {
+            'text': f"Я Священник... Один из немногих, кто до сих пор сопротивляется..."
+                    f"Мы последний лагерь, который ещё не поработил Тёмный Маг..."
+                    f"Я думаю, тебе стоит сходить к Доброму Магу, он всё расскажет",
+            'card': {
+                'type': 'BigImage',
+                'image_id': friends_class['b_priest']['img'],
+                'title': friends_class['b_priest']['name']
+                    },
+            'buttons': [
+                {
+                    "title": "Так отведи меня к нему!",
+                    "hide": True
+                }
+            ]
+        }
 
 
 def fight(user_id, req, res):
-    pass
+    try:
+        answer = req['request']['payload']['fight']
+    except KeyError:
+        res['response']['text'] = 'Не стой на месте. Пора идти в бой!'
+        return
+
+    if answer:
+        enemy1 = enemy_class['bandit']
+        enemy2 = enemy_class['fat_robber']
+        enemy3 = enemy_class['angry_wizard']
 
 
 def end_game(user_id, req, res):
@@ -156,8 +248,9 @@ def handle_dialog(req, res):
     user_id = req['session']['user_id']
     if req['session']['new']:
         res['response']['text'] = 'Приветствую тебя, душа странника! Назови своё имя'
-        session_state['user_id'] = {
-            'state': 1
+        session_state[user_id] = {
+            'state': 1,
+
         }
         return
     states[session_state[user_id]['state']](user_id, req, res)
