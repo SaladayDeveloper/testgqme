@@ -55,12 +55,79 @@ friends_class = {
     }
 }
 
-def change_class(user_id, req, res):
-    pass
 
+def change_class(user_id, req, res):
+    for entity in req['request']['nlu']['entities']:
+        if entity['type'] == 'YANDEX.FIO':
+            if name := entity['value'].get('first_name'):
+                name = name.capitalize()
+                session_state[user_id]['first_name'] = name
+                res['response']['text'] = f"Я рад что ты вернулся, {name}, выбери своё новое обличие"
+                res['response']['card'] = {
+                    'type': 'ItemList',
+                    'header': {
+                        'text': f"Я рад что ты вернулся, {name}, выбери своё новое обличие"
+                    },
+                    'items': [
+                        {
+                            'image_id': player_class['w_knight']['img'],
+                            'title': player_class['w_knight']['name'],
+                            'description': "Я хочу быть им",
+                            'button': {
+                                'text': 'Выбрать героя',
+                                'payload': {
+                                    'class': 'w_knight'
+                                }
+                                    }
+                        },
+                        {
+                            'image_id': player_class['b_knight']['img'],
+                            'title': player_class['b_knight']['name'],
+                            'description': "Я хочу быть им",
+                            'button': {
+                                'text': 'Выбрать героя',
+                                'payload': {
+                                    'class': 'b_knight'
+                                }
+                            }
+                        }
+                    ],
+                    'footer': {
+                        'text': 'Выбор только один...'
+                    }
+                }
+                session_state[user_id] = {
+                    'state': 2
+                }
+                return
+        else:
+            res['response']['text'] = 'Не блефуй! Назови настоящее имя, воин!'
 
 def go_adventure(user_id, req, res):
-    pass
+    try:
+        selected_class = req['request']['payload']['class']
+    except KeyError:
+        res['response']['text'] = 'Пока не выберешь своё обличие, не сможешь вернуться в наш мир'
+        return
+    session_state[user_id].update({
+        'class': selected_class,
+        'state': 3
+    })
+    res['response'] = {
+        'text': f"{selected_class.capitalize} - Ха, что за слабака ты выбрал?! Ладно, сойдёт...",
+        'card': {
+            'type': 'BigImage',
+            'image_id': player_class[selected_class]['img'],
+            'title': f"{selected_class.capitalize} - Ха, что за слабака ты выбрал?! Ладно, сойдёт..."
+        },
+        'buttons': [
+            {
+                "title": "Что со мной произошло?"
+                "payload": {'fight': True},
+                "hide": True
+            }
+        ]
+    }
 
 
 def fight(user_id, req, res):
@@ -70,12 +137,13 @@ def fight(user_id, req, res):
 def end_game(user_id, req, res):
     pass
 
+
 @app.route('\post', methods=['POST'])
 def get_alice_request():
     response = {
         'session': request.json['session'],
         'version': request.json['version'],
-        'response':{
+        'response': {
             'end_session': False
         }
     }
