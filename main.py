@@ -56,10 +56,11 @@ friends_class = {
 
 
 def change_class(user_id, req, res):
+    names = 'кирилл'
     for entity in req['request']['nlu']['entities']:
         if entity['type'] == 'YANDEX.FIO':
-            if name := entity['value'].get('first_name'):
-                name = name.capitalize()
+            if names == 'кирилл':
+                name = names.capitalize()
                 session_state[user_id]['first_name'] = name
                 res['response']['text'] = f"Я рад что ты вернулся, {name}, выбери своё новое обличие"
                 res['response']['card'] = {
@@ -71,9 +72,9 @@ def change_class(user_id, req, res):
                         {
                             'image_id': player_class['w_knight']['img'],
                             'title': player_class['w_knight']['name'],
-                            'description': "Я хочу быть им",
+                            'description': "Я буду им",
                             'button': {
-                                'text': 'Выбрать героя',
+                                'text': 'Выбрать воина 1',
                                 'payload': {
                                     'class': 'w_knight'
                                 }
@@ -84,7 +85,7 @@ def change_class(user_id, req, res):
                             'title': player_class['b_knight']['name'],
                             'description': "Я хочу быть им",
                             'button': {
-                                'text': 'Выбрать героя',
+                                'text': 'Выбрать воина 2',
                                 'payload': {
                                     'class': 'b_knight'
                                 }
@@ -99,8 +100,8 @@ def change_class(user_id, req, res):
                     'state': 2
                 }
                 return
-        else:
-            res['response']['text'] = 'Не блефуй! Назови настоящее имя, воин!'
+    else:
+        res['response']['text'] = 'Не блефуй! Назови настоящее имя, воин!'
 
 
 def go_adventure(user_id, req, res):
