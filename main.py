@@ -1,57 +1,59 @@
+# импортируем библиотеки
 import json
 
 from flask import Flask, request
 from flask_ngrok import run_with_ngrok
 
+# создаём приложение
+# мы передаём __name__, в нем содержится информация,
+# в каком модуле мы находимся.
 app = Flask(__name__)
 run_with_ngrok(app)
 
-
+# Загружаем два скина для выбора персонажа
 player_class = {
     'w_knight': {
         'name': 'Рыцарь',
-        'img': '213044/61c67e999b7637085fd3'
+        'img': '213044/ab0e0e49f00e3eb4032e'
     },
     'b_knight': {
         'name': 'Рыцарь',
-        'img': '965417/84584cf2d01274e4502f'
+        'img': '965417/53c098b89cd26844c3e7'
     }
 }
 
+# Загружаем всех врагов
 enemy_class = [
-    {'name': 'Бандит', 'img': '1030494/b4f5e0cdce81031f659c'},
-    {'name': 'Толстяк', 'img': '1652229/cb3d50939c01643cc705'},
-    {'name': 'Злой Маг', 'img': '1652229/674668c85fb558ed011b'},
-    {'name': 'Шпана', 'img': '965417/5cb25033fc74a80240e7'},
-    {'name': 'Лучник', 'img': '1521359/c5088cff3ee05a17d3a6'},
-    {'name': 'Панк', 'img': '1030494/8aa9af21e99fbf43f51b'},
-    {'name': 'Воин', 'img': '1030494/dd8ac1abb56b7e5a3fb1'}
+    {'name': 'Бандит', 'img': '937455/952cbc400eaa77b7783e'},
+    {'name': 'Толстяк', 'img': '213044/bdb2098793bd50e33f24'},
+    {'name': 'Злой Маг', 'img': '1521359/ee5330cff89118c8320f'},
+    {'name': 'Шпана', 'img': '965417/796f3c199189ca463524'},
+    {'name': 'Лучник', 'img': '937455/f7a7d47badea5eece43f'},
+    {'name': 'Панк', 'img': '1030494/03133c23fea23c08fdea'},
+    {'name': 'Воин', 'img': '1521359/07497b2575374b779bd5'}
 ]
 
+# Загружаем всех друзей
 friends_class = {
     'b_priest': {
         'name': 'Священник',
-        'img': '1521359/7ec168b22eeb821aa28c'
-    },
-    'w_priest': {
-        'name': 'Священник',
-        'img': '1521359/f9a2a14661eae47597d9'
+        'img': '1030494/fa6a0c54e1e4971e6c0d'
     },
     'good_wizard': {
         'name': 'Добрый Маг',
-        'img': '965417/036a076c5d1157cc6a9e'
+        'img': '213044/d75eea8401b3bd570d71'
     },
     'redneck': {
         'name': 'Деревенщина',
-        'img': '965417/e86a9455c5837840e33a'
+        'img': '997614/82ef7494a778a7ff45fb'
     },
     'сommander': {
         'name': 'Командир',
-        'img': '965417/e3f0c8562cd8e2e53a3d'
+        'img': '997614/a53fb38d45b9e7285de2'
     },
     'mother': {
         'name': 'Мать',
-        'img': '1652229/e01096683abb63095bb7'
+        'img': '1521359/cb878a879cbdc877dee1'
     }
 }
 
@@ -110,12 +112,25 @@ def change_person(user_id, req, res):
             go_adventure(user_id, req, res)
         except KeyError:
             res['response']['text'] = 'Пока не выберешь своё обличие, не сможешь вернуться в наш мир'
+            res['response']['buttons'] = [
+                {
+                    'title': 'Верхний',
+                    "payload": {'class': 'w_knight'},
+                    'hide': True
+                },
+                {
+                    'title': 'Нижний',
+                    "payload": {'class': 'b_knight'},
+                    'hide': True
+                }
+            ]
             return
 
 
 # Функция, в которой описано всё основное приключение
 def go_adventure(user_id, req, res):
-    if 'original_utterance' not in req['request']:
+    if 'original_utterance' not in req['request'] or \
+            req['request']['original_utterance'] == "Начать сначала":
         res['response'] = {
             'text': f"Ха, что за слабака ты выбрал?! Ладно, сойдёт...",
             'card': {
@@ -366,11 +381,6 @@ def go_adventure(user_id, req, res):
     elif req['request']['original_utterance'] == "Эй, уйди от меня!":
         res['response'] = {
             'text': f"Пройдя ещё немного вперёд, вы пришли к палатке Доброго Мага",
-            'card': {
-                'type': 'BigImage',
-                'image_id': friends_class['mother']['img'],
-                'title': f"Пройдя ещё немного вперёд, вы пришли к палатке Доброго Мага"
-            },
             'buttons': [
                 {
                     "title": "Войти",
@@ -414,12 +424,6 @@ def go_adventure(user_id, req, res):
         res['response'] = {
             'text': f"После этих слов она словно испарилась. "
                     f"Ты прошёл ещё немного и оказался у палатки Доброго Мага",
-            'card': {
-                'type': 'BigImage',
-                'image_id': friends_class['mother']['img'],
-                'title': f"После этих слов она словно испарилась. "
-                         f"Ты прошёл ещё немного и оказался у палатки Доброго Мага"
-            },
             'buttons': [
                 {
                     "title": "Войти",
@@ -430,11 +434,6 @@ def go_adventure(user_id, req, res):
     if req['request']['original_utterance'] == "Извините, я что-то попутал":
         res['response'] = {
             'text': f"Девушка ушла. Пройдя ещё немного, ты оказался у палатки Доброго Мага",
-            'card': {
-                'type': 'BigImage',
-                'image_id': friends_class['mother']['img'],
-                'title': f"Девушка ушла. Пройдя ещё немного, ты оказался у палатки Доброго Мага"
-            },
             'buttons': [
                 {
                     "title": "Войти",
@@ -565,12 +564,6 @@ def go_adventure(user_id, req, res):
         res['response'] = {
             'text': f"Вдруг она исчезла. Что это было, ты не понял. Пройдя ещё немного "
                     f"ты оказался у палатки Доброго Мага",
-            'card': {
-                'type': 'BigImage',
-                'image_id': friends_class['mother']['img'],
-                'title': f"Вдруг она исчезла. Что это было, ты не понял. Пройдя ещё немного "
-                    f"ты оказался у палатки Доброго Мага"
-            },
             'buttons': [
                 {
                     "title": "Войти",
@@ -1078,13 +1071,17 @@ def go_adventure(user_id, req, res):
         end_game(user_id, req, res)
     if req['request']['original_utterance'] == "Испугаться и убежать":
         end_game(user_id, req, res)
+    # Если игрок захочет покинуть сессию, то мы попрощаемся и завершим её
     elif req['request']['original_utterance'] == "Выйти":
         res['response'] = {
             'text': f"Пока-пока!"
         }
         res['response']['end_session'] = True
+    elif req['request']['original_utterance'] == "Начать сначала":
+        go_adventure(user_id, req, res)
 
 
+# Функция, организовывающая выход из игры при выборе игроком разных ситуаций
 def end_game(user_id, req, res):
     if req['request']['original_utterance'] == "Испугаться и убежать":
         res['response'] = {
@@ -1174,10 +1171,12 @@ def end_game(user_id, req, res):
                 }
             ]
         }
+    # Если игрок захочет начать бой сначала, то мы вернём его в бой
     elif req['request']['original_utterance'] == "Начать бой сначала":
         go_adventure(user_id, req, res)
 
 
+# Обработчик
 @app.route('/post', methods=['POST'])
 def get_alice_request():
     response = {
@@ -1187,11 +1186,27 @@ def get_alice_request():
             'end_session': False
         }
     }
-
     handle_dialog(request.json, response)
+    # Если игрок не отвечает на кнопки, а пишет какую-то ерунду, то мы отыгрываем концовку
+    if 'text' not in response['response']:
+        response['response'] = {
+            'text': f"Ты начал нести какую-то ахинею, тебя посчитали психом и умертвили. "
+                    f"Подсказка: выбирай варианты ответов, а не придумывай свои!",
+            'buttons': [
+                {
+                    "title": "Начать сначала",
+                    "hide": True
+                },
+                {
+                    "title": "Выйти",
+                    "hide": True
+                }
+            ]
+        }
     return json.dumps(response)
 
 
+# Функция, с которой начнётся игра. Мы поприветствуем игрока и попросим представиться, если он новый.
 def handle_dialog(req, res):
     user_id = req['session']['user_id']
     if req['session']['new']:
@@ -1204,11 +1219,14 @@ def handle_dialog(req, res):
     states[session_state[user_id]['state']](user_id, req, res)
 
 
+# Словарь с двумя основными функциями, для перехода между ними
 states = {
     1: change_person,
     2: go_adventure
 }
+# Тут хранятся состояния сессии
 session_state = {}
 
+# Завершаем программу
 if __name__ == '__main__':
     app.run()
