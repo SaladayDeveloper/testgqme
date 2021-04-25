@@ -6,14 +6,15 @@ from flask_ngrok import run_with_ngrok
 app = Flask(__name__)
 run_with_ngrok(app)
 
+
 player_class = {
     'w_knight': {
         'name': 'Рыцарь',
-        'img': '1521359/3157da3180aa703e088b'
+        'img': '213044/61c67e999b7637085fd3'
     },
     'b_knight': {
         'name': 'Рыцарь',
-        'img': '965417/fa9468b3f67b8ace8e17'
+        'img': '965417/84584cf2d01274e4502f'
     }
 }
 
@@ -55,7 +56,8 @@ friends_class = {
 }
 
 
-def change_class(user_id, req, res):
+# Функция с выбором персонажа
+def change_person(user_id, req, res):
     if session_state[user_id]['first_name'] == None:
         names = 'кирилл'
         for entity in req['request']['nlu']['entities']:
@@ -87,12 +89,12 @@ def change_class(user_id, req, res):
                     }
                     res['response']['buttons'] = [
                         {
-                            'title': 'Да',
+                            'title': 'Верхний',
                             "payload": {'class': 'w_knight'},
                             'hide': True
                         },
                         {
-                            'title': 'Нет',
+                            'title': 'Нижний',
                             "payload": {'class': 'b_knight'},
                             'hide': True
                         }
@@ -111,6 +113,7 @@ def change_class(user_id, req, res):
             return
 
 
+# Функция, в которой описано всё основное приключение
 def go_adventure(user_id, req, res):
     if 'original_utterance' not in req['request']:
         res['response'] = {
@@ -341,12 +344,12 @@ def go_adventure(user_id, req, res):
         }
     if req['request']['original_utterance'] == "Кто вы такая?":
         res['response'] = {
-            'text': f"Обратив внимание на лицо девушки, в ваших глазах вдруг потемнело "
+            'text': f"Обратив внимание на лицо девушки, в ваших глазах вдруг потемнело. "
                     f"Она напомнила вам вашу мать",
             'card': {
                 'type': 'BigImage',
                 'image_id': friends_class['mother']['img'],
-                'title': f"Обратив внимание на лицо девушки, в ваших глазах вдруг потемнело "
+                'title': f"Обратив внимание на лицо девушки, в ваших глазах вдруг потемнело. "
                     f"Она напомнила вам вашу мать"
             },
             'buttons': [
@@ -651,12 +654,12 @@ def go_adventure(user_id, req, res):
         }
     if req['request']['original_utterance'] == "Думаю, да":
         res['response'] = {
-            'text': f"Тут вдруг неожиданно в палатку забегает ещё один рыцарь "
+            'text': f"Тут вдруг неожиданно в палатку забегает ещё один рыцарь. "
                     f"По его погонам ты понимаешь, что это командир",
             'card': {
                 'type': 'BigImage',
                 'image_id': friends_class['сommander']['img'],
-                'title': f"Тут вдруг неожиданно в палатку забегает ещё один рыцарь "
+                'title': f"Тут вдруг неожиданно в палатку забегает ещё один рыцарь. "
                     f"По его погонам ты понимаешь, что это командир"
             },
             'buttons': [
@@ -668,12 +671,12 @@ def go_adventure(user_id, req, res):
         }
     elif req['request']['original_utterance'] == "Что именно нужно сделать?":
         res['response'] = {
-            'text': f'"У меня есть план..." - Тут вдруг неожиданно в палатку забегает ещё один рыцарь '
+            'text': f'"У меня есть план..." - Тут вдруг неожиданно в палатку забегает ещё один рыцарь. '
                     f"По его погонам ты понимаешь, что это командир",
             'card': {
                 'type': 'BigImage',
                 'image_id': friends_class['сommander']['img'],
-                'title': f'"У меня есть план..." - Тут вдруг неожиданно в палатку забегает ещё один рыцарь '
+                'title': f'"У меня есть план..." - Тут вдруг неожиданно в палатку забегает ещё один рыцарь. '
                     f"По его погонам ты понимаешь, что это командир"
             },
             'buttons': [
@@ -685,12 +688,12 @@ def go_adventure(user_id, req, res):
         }
     if req['request']['original_utterance'] == "Я уничтожу его!":
         res['response'] = {
-            'text': f"Тут вдруг неожиданно в палатку забегает ещё один рыцарь "
+            'text': f"Тут вдруг неожиданно в палатку забегает ещё один рыцарь. "
                     f"По его погонам ты понимаешь, что это командир",
             'card': {
                 'type': 'BigImage',
                 'image_id': friends_class['сommander']['img'],
-                'title': f"Тут вдруг неожиданно в палатку забегает ещё один рыцарь "
+                'title': f"Тут вдруг неожиданно в палатку забегает ещё один рыцарь. "
                     f"По его погонам ты понимаешь, что это командир"
             },
             'buttons': [
@@ -734,11 +737,11 @@ def go_adventure(user_id, req, res):
         }
     if req['request']['original_utterance'] == "Вытаращить глаза":
         res['response'] = {
-            'text': f"Они сдесь! ТЁМНЫЙ МАГ СДЕСЬ!!!",
+            'text': f"Они здесь! ТЁМНЫЙ МАГ ЗДЕСЬ!!!",
             'card': {
                 'type': 'BigImage',
                 'image_id': friends_class['сommander']['img'],
-                'title': f"Они сдесь! ТЁМНЫЙ МАГ СДЕСЬ!!!"
+                'title': f"Они здесь! ТЁМНЫЙ МАГ ЗДЕСЬ!!!"
             },
             'buttons': [
                 {
@@ -777,67 +780,402 @@ def go_adventure(user_id, req, res):
             'buttons': [
                 {
                     "title": "Начать бой",
-                    "payload": {'fight': True},
                     "hide": True
                 }
             ]
         }
-    if req['request']['original_utterance'] == "Начать бой":
-        session_state[user_id]['state'] = 3
-
-
-def fight(user_id, req, res):
-    try:
-        answer = req['request']['payload']['fight']
-    except KeyError:
-        res['response']['text'] = 'Не стой на месте. Пора идти в бой!'
-        return
-    if answer:
-        enemy = enemy_class[0]['name']['img']
-        session_state[user_id]['state'] = 4
+    if req['request']['original_utterance'] == "Начать бой" or \
+            req['request']['original_utterance'] == "Начать бой сначала":
         res['response'] = {
-            'text': f"Ваш противник - {enemy[0]['name']}",
+            'text': f"Ваш противник - {enemy_class[3]['name']}",
             'card': {
                 'type': "BigImage",
-                'image_id': enemy['img'],
-                'title': f"Ваш противник - {enemy[0]['name']}"
+                'image_id': enemy_class[3]['img'],
+                'title': f"Ваш противник - {enemy_class[3]['name']}"
             },
             'buttons': [
                 {
                     "title": "Ударить",
-                    "payload": {'fight': True},
                     "hide": True
                 },
                 {
                     "title": "Увернуться",
-                    "payload": {'fight': True},
                     "hide": True
                 },
                 {
                     "title": "Испугаться и убежать",
-                    "payload": {'fight': False},
                     "hide": True
-                },
+                }
             ]
         }
-    else:
+    if req['request']['original_utterance'] == "Ударить":
+        res['response'] = {
+            'text': f"{enemy_class[3]['name']} повержена",
+            'card': {
+                'type': "BigImage",
+                'image_id': enemy_class[3]['img'],
+                'title': f"{enemy_class[3]['name']} повержена"
+            },
+            'buttons': [
+                {
+                    "title": "Следующий враг",
+                    "hide": True
+                },
+                {
+                    "title": "Испугаться и убежать",
+                    "hide": True
+                }
+            ]
+        }
+    elif req['request']['original_utterance'] == "Увернуться":
+        res['response'] = {
+            'text': f"Вы увернулись и уклонились от удара",
+            'card': {
+                'type': "BigImage",
+                'image_id': enemy_class[3]['img'],
+                'title': f"Вы увернулись и уклонились от удара"
+            },
+            'buttons': [
+                {
+                    "title": "Ударить",
+                    "hide": True
+                },
+                {
+                    "title": "Испугаться и убежать",
+                    "hide": True
+                }
+            ]
+        }
+    if req['request']['original_utterance'] == "Следующий враг":
+        res['response'] = {
+            'text': f"Ваш противник - {enemy_class[5]['name']}",
+            'card': {
+                'type': "BigImage",
+                'image_id': enemy_class[5]['img'],
+                'title': f"Ваш противник - {enemy_class[5]['name']}"
+            },
+            'buttons': [
+                {
+                    "title": "Ударить панка",
+                    "hide": True
+                },
+                {
+                    "title": "Сделать комплимент о его причёске",
+                    "hide": True
+                },
+                {
+                    "title": "Испугаться и убежать",
+                    "hide": True
+                }
+            ]
+        }
+    if req['request']['original_utterance'] == "Ударить панка":
         end_game(user_id, req, res)
+    elif req['request']['original_utterance'] == "Сделать комплимент о его причёске":
+        res['response'] = {
+            'text': f"{enemy_class[5]['name']} растрогался и встал на вашу сторону!",
+            'card': {
+                'type': "BigImage",
+                'image_id': enemy_class[5]['img'],
+                'title': f"{enemy_class[5]['name']} растрогался и встал на вашу сторону!"
+            },
+            'buttons': [
+                {
+                    "title": "Напасть на лучника",
+                    "hide": True
+                },
+                {
+                    "title": "Испугаться и убежать",
+                    "hide": True
+                }
+            ]
+        }
+    if req['request']['original_utterance'] == "Напасть на лучника":
+        res['response'] = {
+            'text': f"Ты хотел напасть на {enemy_class[4]['name']}а, "
+                    f"но он напал на тебя...",
+            'card': {
+                'type': "BigImage",
+                'image_id': enemy_class[4]['img'],
+                'title': f"Ты хотел напасть на {enemy_class[4]['name']}а, "
+                    f"но он напал на тебя..."
+            },
+            'buttons': [
+                {
+                    "title": "Ловить все его стрелы и кидать в него",
+                    "hide": True
+                },
+                {
+                    "title": "Уворачиваться",
+                    "hide": True
+                },
+                {
+                    "title": "Испугаться и убежать",
+                    "hide": True
+                }
+            ]
+        }
+    if req['request']['original_utterance'] == "Ловить все его стрелы и кидать в него":
+        end_game(user_id, req, res)
+    elif req['request']['original_utterance'] == "Уворачиваться":
+        res['response'] = {
+            'text': f"Вы увернулись от стрел лучника, они у него кончились "
+                    f"и он сбежал с поля боя, напугавшись вас",
+            'card': {
+                'type': "BigImage",
+                'image_id': enemy_class[4]['img'],
+                'title': f"Вы увернулись от стрел лучника, они у него кончились "
+                         f"и он сбежал с поля боя, напугавшись вас"
+            },
+            'buttons': [
+                {
+                    "title": "Что?? Бандит с АК-47?",
+                    "hide": True
+                },
+                {
+                    "title": "Испугаться и убежать",
+                    "hide": True
+                }
+            ]
+        }
+    if req['request']['original_utterance'] == "Что?? Бандит с АК-47?":
+        res['response'] = {
+            'text': f"И вправду... Вообще, его не должно было быть в игре, "
+                    f"но он выглядил слишком брутально!",
+            'card': {
+                'type': "BigImage",
+                'image_id': enemy_class[0]['img'],
+                'title': f"И вправду... Вообще, его не должно было быть в игре, "
+                        f"Но этот выглядил слишком брутально!"
+            },
+            'buttons': [
+                {
+                    "title": "Эй, разработчик? И что мне с ним делать?",
+                    "hide": True
+                },
+                {
+                    "title": "Побежать на него с мечом",
+                    "hide": True
+                },
+                {
+                    "title": "Испугаться и убежать",
+                    "hide": True
+                }
+            ]
+        }
+    if req['request']['original_utterance'] == "Эй, разработчик? И что мне с ним делать?":
+        res['response'] = {
+            'text': f"Ладно-ладно, я уберу его. Твой новый противник - {enemy_class[6]['name']}",
+            'card': {
+                'type': "BigImage",
+                'image_id': enemy_class[6]['img'],
+                'title': f"Ладно-ладно, я уберу его. Твой новый противник - {enemy_class[6]['name']}"
+            },
+            'buttons': [
+                {
+                    "title": "Сразиться в бою на мечах",
+                    "hide": True
+                },
+                {
+                    "title": "Испугаться и убежать",
+                    "hide": True
+                }
+            ]
+        }
+    elif req['request']['original_utterance'] == "Побежать на него с мечом":
+        end_game(user_id, req, res)
+    if req['request']['original_utterance'] == "Сразиться в бою на мечах":
+        res['response'] = {
+            'text': f"В бою на мечах тебе нет равных! {enemy_class[6]['name']} повержен",
+            'card': {
+                'type': "BigImage",
+                'image_id': enemy_class[6]['img'],
+                'title': f"В бою на мечах тебе нет равных! {enemy_class[6]['name']} повержен"
+            },
+            'buttons': [
+                {
+                    "title": "Вау, вот это толстяк там впереди!",
+                    "hide": True
+                },
+                {
+                    "title": "Испугаться и убежать",
+                    "hide": True
+                }
+            ]
+        }
+    if req['request']['original_utterance'] == "Вау, вот это толстяк там впереди!":
+        res['response'] = {
+            'text': f'"Сам ты толстяк" - крикнул тебе {enemy_class[1]["name"]}',
+            'card': {
+                'type': "BigImage",
+                'image_id': enemy_class[1]['img'],
+                'title': f'"Сам ты толстяк" - крикнул тебе {enemy_class[1]["name"]}'
+            },
+            'buttons': [
+                {
+                    "title": "Предложить попить чай с конфетами",
+                    "hide": True
+                },
+                {
+                    "title": "Проткнуть иголкой",
+                    "hide": True
+                },
+                {
+                    "title": "Испугаться и убежать",
+                    "hide": True
+                }
+            ]
+        }
+    if req['request']['original_utterance'] == "Предложить попить чай с конфетами":
+        end_game(user_id, req, res)
+    elif req['request']['original_utterance'] == "Проткнуть иголкой":
+        res['response'] = {
+            'text': f"{enemy_class[1]['name']} сдулся и улетел, как шарик",
+            'buttons': [
+                {
+                    "title": "Поймать Тёмного Мага",
+                    "hide": True
+                },
+                {
+                    "title": "Испугаться и убежать",
+                    "hide": True
+                }
+            ]
+        }
+    if req['request']['original_utterance'] == "Поймать Тёмного Мага":
+        res['response'] = {
+            'text': f"Тёмный Маг пойман! Ты ждал эпичной битвы? :)",
+            'card': {
+                'type': "BigImage",
+                'image_id': enemy_class[2]['img'],
+                'title': f"Тёмный Маг пойман! Ты ждал эпичной битвы? :)"
+            },
+            'buttons': [
+                {
+                    "title": "Да!",
+                    "hide": True
+                }
+            ]
+        }
+    if req['request']['original_utterance'] == "Да!":
+        res['response'] = {
+            'text': f"А Маг вот не ждал! Когда ты подошёл к нему, он сразу же наколдовал себе наручники "
+                    f"и приковал себя к ним",
+            'card': {
+                'type': "BigImage",
+                'image_id': enemy_class[2]['img'],
+                'title': f"А Маг вот не ждал! Когда ты подошёл к нему, он сразу же наколдовал себе наручники "
+                    f"и приковал себя к ним"
+            },
+            'buttons': [
+                {
+                    "title": "Я молодец!",
+                    "hide": True
+                }
+            ]
+        }
+    if req['request']['original_utterance'] == "Я молодец!":
+        end_game(user_id, req, res)
+    if req['request']['original_utterance'] == "Испугаться и убежать":
+        end_game(user_id, req, res)
+    elif req['request']['original_utterance'] == "Выйти":
+        res['response'] = {
+            'text': f"Пока-пока!"
+        }
+        res['response']['end_session'] = True
 
 
 def end_game(user_id, req, res):
-    try:
-        answer = req['request']['payload']['fight']
-    except KeyError:
-        res['response']['text'] = f"Ты не можешь просто так уйти..."
-        return
-    if not answer:
-        res['response']['text'] = f"Из-за вашего отказа маг убил вас, посчитав предателем. Поздравляю, вы дурак!"
-    else:
-        res['response']['text'] = f"Молодец! Ты перебил всех. Маг сделал тебя новым правителем," \
-                                  f"А сам стал служить тебе, как и все оставшиеся выжившие из лагеря сопротивления." \
-                                  f"Все ликуют!" \
-                                  f"Мир снова воцарил в Орррске!"
-    res['response']['end_session'] = True
+    if req['request']['original_utterance'] == "Испугаться и убежать":
+        res['response'] = {
+            'text': f"Из-за вашего отказа маг убил вас, посчитав предателем. Поздравляю, вы дурак!",
+            'buttons': [
+                {
+                    "title": "Начать бой сначала",
+                    "hide": True
+                },
+                {
+                    "title": "Выйти",
+                    "hide": True
+                }
+            ]
+        }
+    elif req['request']['original_utterance'] == "Ударить панка":
+        res['response'] = {
+            'text': f"{enemy_class[5]['name']} не любит, когда его бьют. "
+                    f"Он ударил тебя в ответ. Ты проиграл. "
+                    f"Панки, хой!",
+            'buttons': [
+                {
+                    "title": "Начать бой сначала",
+                    "hide": True
+                },
+                {
+                    "title": "Выйти",
+                    "hide": True
+                }
+            ]
+        }
+    elif req['request']['original_utterance'] == "Ловить все его стрелы и кидать в него":
+        res['response'] = {
+            'text': f"Такой глупости я ещё не видел..."
+                    f"Премия Дарвина у тебя в кармане!",
+            'buttons': [
+                {
+                    "title": "Начать бой сначала",
+                    "hide": True
+                },
+                {
+                    "title": "Выйти",
+                    "hide": True
+                }
+            ]
+        }
+    elif req['request']['original_utterance'] == "Побежать на него с мечом":
+        res['response'] = {
+            'text': f"{enemy_class[0]['name']} начал стрелять по тебе и ты умер"
+                    f"Глупо!",
+            'buttons': [
+                {
+                    "title": "Начать бой сначала",
+                    "hide": True
+                },
+                {
+                    "title": "Выйти",
+                    "hide": True
+                }
+            ]
+        }
+    elif req['request']['original_utterance'] == "Предложить попить чай с конфетами":
+        res['response'] = {
+            'text': f"{enemy_class[1]['name']} не отказался. Вы ушли с поля боя пить чай"
+                    f"Ищи плюсы! Зато ты жив!",
+            'buttons': [
+                {
+                    "title": "Начать бой сначала",
+                    "hide": True
+                },
+                {
+                    "title": "Выйти",
+                    "hide": True
+                }
+            ]
+        }
+    elif req['request']['original_utterance'] == "Я молодец!":
+        res['response'] = {
+            'text': f"Молодец! Ты перебил всех. Добрый Маг сделал тебя новым правителем, " 
+                    f"а сам стал служить тебе, как и все оставшиеся выжившие из лагеря сопротивления. "
+                    f"Все ликуют! "
+                    f"Мир снова воцарил в Орррске!",
+            'buttons': [
+                {
+                    "title": "Выйти",
+                    "hide": True
+                }
+            ]
+        }
+    elif req['request']['original_utterance'] == "Начать бой сначала":
+        go_adventure(user_id, req, res)
 
 
 @app.route('/post', methods=['POST'])
@@ -867,14 +1205,10 @@ def handle_dialog(req, res):
 
 
 states = {
-    1: change_class,
-    2: go_adventure,
-    3: fight,
-    4: end_game
+    1: change_person,
+    2: go_adventure
 }
-session_state = {
-
-}
+session_state = {}
 
 if __name__ == '__main__':
     app.run()
