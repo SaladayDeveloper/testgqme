@@ -2,13 +2,11 @@
 import json
 
 from flask import Flask, request
-from flask_ngrok import run_with_ngrok
 
 # создаём приложение
 # мы передаём __name__, в нем содержится информация,
 # в каком модуле мы находимся.
 app = Flask(__name__)
-run_with_ngrok(app)
 
 # Загружаем два скина для выбора персонажа
 player_class = {
@@ -61,11 +59,10 @@ friends_class = {
 # Функция с выбором персонажа
 def change_person(user_id, req, res):
     if session_state[user_id]['first_name'] == None:
-        names = 'кирилл'
         for entity in req['request']['nlu']['entities']:
             if entity['type'] == 'YANDEX.FIO':
-                if names == 'кирилл':
-                    name = names.capitalize()
+                if name := entity['value'].get('first_name'):
+                    name = name.capitalize()
                     session_state[user_id]['first_name'] = name
                     res['response']['text'] = f"Я рад что ты вернулся, {name}, выбери своё новое обличие"
                     res['response']['card'] = {
